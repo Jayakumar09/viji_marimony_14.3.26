@@ -39,8 +39,8 @@ const Terms = () => {
       duration: 'Unlimited',
       features: [
         { name: 'Basic profile creation', included: true },
-        { name: 'Profile search', included: true, limit: 'Limited' },
-        { name: 'Send interests per day', included: true, limit: '5' },
+        { name: 'Profile search & matching', included: true, note: 'Based on availability' },
+        { name: 'Express interest in profiles', included: true, note: 'When suitable matches found' },
         { name: 'View contact details', included: false },
         { name: 'Priority listing', included: false },
         { name: 'AI verification badge', included: false },
@@ -56,8 +56,8 @@ const Terms = () => {
       successFee: '₹25,000',
       features: [
         { name: 'Basic profile creation', included: true },
-        { name: 'Profile search', included: true, limit: 'Unlimited' },
-        { name: 'Send interests per day', included: true, limit: '10' },
+        { name: 'Profile search & matching', included: true, note: 'Enhanced visibility' },
+        { name: 'Express interest in profiles', included: true, note: 'When suitable matches found' },
         { name: 'View contact details', included: true },
         { name: 'Priority listing', included: false },
         { name: 'AI verification badge', included: false },
@@ -73,8 +73,8 @@ const Terms = () => {
       successFee: '₹50,000',
       features: [
         { name: 'Basic profile creation', included: true },
-        { name: 'Profile search', included: true, limit: 'Unlimited' },
-        { name: 'Send interests per day', included: true, limit: 'Unlimited' },
+        { name: 'Profile search & matching', included: true, note: 'Higher visibility' },
+        { name: 'Express interest in profiles', included: true, note: 'When suitable matches found' },
         { name: 'View contact details', included: true },
         { name: 'Priority listing', included: true },
         { name: 'AI verification badge', included: true },
@@ -90,8 +90,8 @@ const Terms = () => {
       successFee: '₹1,00,000',
       features: [
         { name: 'Basic profile creation', included: true },
-        { name: 'Profile search', included: true, limit: 'Unlimited' },
-        { name: 'Send interests per day', included: true, limit: 'Unlimited' },
+        { name: 'Profile search & matching', included: true, note: 'Highest visibility' },
+        { name: 'Express interest in profiles', included: true, note: 'When suitable matches found' },
         { name: 'View contact details', included: true },
         { name: 'Priority listing', included: true },
         { name: 'AI verification badge', included: true },
@@ -126,6 +126,16 @@ const Terms = () => {
             <Chip label="Payment Terms" component="a" href="#payment-terms" clickable color="primary" />
             <Chip label="Cancellation & Refunds" component="a" href="#cancellation-policy" clickable color="primary" />
           </Box>
+        </Paper>
+
+        {/* Important Disclaimer */}
+        <Paper sx={{ p: 3, mb: 3, borderLeft: '4px solid #ff9800', bgcolor: '#fff3e0' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#e65100', mb: 1 }}>
+            ⚠️ Important Disclaimer
+          </Typography>
+          <Typography variant="body2">
+            The number of matches, profiles shown, and interests expressed depends on <strong>availability of suitable matches</strong> on our platform at any given time. We do not guarantee a specific number of profiles or matches. Our service is provided on a <strong>"best efforts"</strong> basis - we show you profiles based on your preferences when suitable matches are available in our database.
+          </Typography>
         </Paper>
 
         {/* General Terms and Conditions */}
@@ -227,7 +237,7 @@ const Terms = () => {
               2.4 Profile Visibility
             </Typography>
             <Typography variant="body2" paragraph>
-              Your profile visibility depends on your subscription tier. Free users have limited visibility, while paid subscribers get enhanced visibility and priority listing.
+              Your profile visibility depends on your subscription tier. Free users have limited visibility, while paid subscribers get enhanced visibility and priority listing in search results.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -241,6 +251,10 @@ const Terms = () => {
           <AccordionDetails>
             <Typography variant="body1" paragraph>
               Vijayalakshmi Boyar Matrimony offers different subscription tiers to meet your needs. Choose the plan that best suits your requirements.
+            </Typography>
+
+            <Typography variant="body2" sx={{ mb: 2, p: 2, bgcolor: '#fff3e0', borderRadius: 1 }}>
+              <strong>Note:</strong> The number of profiles shown and matches found depends on the availability of suitable matches on our platform. We provide best-efforts matching based on your preferences and profile compatibility.
             </Typography>
 
             {/* Plans Comparison Table */}
@@ -261,7 +275,7 @@ const Terms = () => {
                     <TableRow key={index} sx={{ '&:nth-of-type(even)': { bgcolor: '#f5f5f5' } }}>
                       <TableCell component="th" scope="row">
                         {feature.name}
-                        {feature.limit && <Typography variant="caption" display="block" color="text.secondary">{feature.limit}</Typography>}
+                        {feature.note && <Typography variant="caption" display="block" color="text.secondary">{feature.note}</Typography>}
                       </TableCell>
                       {subscriptionPlans.map(plan => (
                         <TableCell key={plan.id} align="center">
@@ -314,7 +328,10 @@ const Terms = () => {
                 <Box component="ul" sx={{ pl: 2, mt: 1 }}>
                   {plan.features.filter(f => f.included).map((feature, idx) => (
                     <li key={idx}>
-                      <Typography variant="body2">{feature.name} {feature.limit && `(${feature.limit})`}</Typography>
+                      <Typography variant="body2">
+                        {feature.name} 
+                        {feature.note && <Typography component="span" variant="caption" color="text.secondary"> ({feature.note})</Typography>}
+                      </Typography>
                     </li>
                   ))}
                 </Box>
@@ -428,35 +445,48 @@ const Terms = () => {
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.1 AI Verification
+              6.1 Service Availability Disclaimer
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <strong>Important:</strong> Vijayalakshmi Boyar Matrimony is a platform that connects individuals seeking marriage partners. We do <strong>not guarantee</strong> that you will find a suitable match or get married through our services. The number of profiles shown, matches found, and interests received depends on:
+            </Typography>
+            <Box component="ul" sx={{ pl: 2 }}>
+              <li><Typography variant="body2">Number of active users on the platform</Typography></li>
+              <li><Typography variant="body2">Compatibility of your profile with other users</Typography></li>
+              <li><Typography variant="body2">Profile completeness and visibility settings</Typography></li>
+              <li><Typography variant="body2">Market conditions and user activity</Typography></li>
+            </Box>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
+              6.2 AI Verification
             </Typography>
             <Typography variant="body2" paragraph>
               Our AI verification system uses facial recognition and document validation to ensure profile authenticity. By using our services, you consent to AI processing of your photos and documents for verification purposes.
             </Typography>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.2 Profile Sharing
+              6.3 Profile Sharing
             </Typography>
             <Typography variant="body2" paragraph>
               Premium and Pro members can generate shareable profile links. Recipients who view your shared profile can only see limited information until they register and subscribe.
             </Typography>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.3 Limitation of Liability
+              6.4 Limitation of Liability
             </Typography>
             <Typography variant="body2" paragraph>
-              Vijayalakshmi Boyar Matrimony provides a platform for connecting potential partners. We do not guarantee the authenticity of any user or the success of any marriage resulting from our services.
+              Vijayalakshmi Boyar Matrimony provides a platform for connecting potential partners. We do not guarantee the authenticity of any user or the success of any marriage resulting from our services. We are not liable for any disputes, losses, or damages arising from interactions between users.
             </Typography>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.4 Changes to Terms
+              6.5 Changes to Terms
             </Typography>
             <Typography variant="body2" paragraph>
               We reserve the right to modify these terms at any time. Continued use of our services after changes constitutes acceptance of the new terms.
             </Typography>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.5 Governing Law
+              6.6 Governing Law
             </Typography>
             <Typography variant="body2" paragraph>
               These terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of courts in Tamil Nadu, India.
