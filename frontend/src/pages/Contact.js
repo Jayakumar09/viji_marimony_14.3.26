@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Container, Typography, Box, Grid, Card, CardContent, TextField, Button, Alert } from '@mui/material';
 import { Email, Phone, LocationOn, Send } from '@mui/icons-material';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -264,7 +263,6 @@ const Contact = () => {
           </Grid>
         </Grid>
       </Container>
-      <Footer />
     </div>
   );
 };

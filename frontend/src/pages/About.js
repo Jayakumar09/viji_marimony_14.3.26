@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Typography, Box, Grid, Card, CardContent } from '@mui/material';
 import { Favorite, People, VerifiedUser, Support } from '@mui/icons-material';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 const About = () => {
   return (
@@ -160,7 +159,6 @@ const About = () => {
           </Grid>
         </Grid>
       </Container>
-      <Footer />
     </div>
   );
 };
