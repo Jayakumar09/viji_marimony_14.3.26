@@ -31,17 +31,6 @@ const Home = () => {
     }
   ];
 
-  const quickLinks = [
-    { title: 'About Us', path: '/about' },
-    { title: 'How It Works', path: '/how-it-works' },
-    { title: 'Success Stories', path: '#testimonials' },
-    { title: 'Pricing', path: '/subscription' },
-    { title: 'Contact Us', path: '#contact' },
-    { title: 'Privacy Policy', path: '/privacy' },
-    { title: 'Terms & Conditions', path: '/terms' },
-    { title: 'FAQ', path: '#faq' }
-  ];
-
   const faqs = [
     {
       question: 'How does the matching process work?',
@@ -228,28 +217,6 @@ const Home = () => {
                 Daily New Members
               </Typography>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* Quick Links Section */}
-      <Box py={6} bgcolor="#f5f5f5">
-        <Container maxWidth="lg">
-          <Typography variant="h4" textAlign="center" gutterBottom style={{ fontWeight: 'bold', mb: 3 }}>
-            Quick Links
-          </Typography>
-          <Grid container spacing={2} justifyContent="center">
-            {quickLinks.map((link, index) => (
-              <Grid item xs={6} sm={3} md={2} key={index}>
-                <Link 
-                  href={link.path} 
-                  underline="hover" 
-                  style={{ color: '#8B5CF6', display: 'block', textAlign: 'center', padding: '8px' }}
-                >
-                  {link.title}
-                </Link>
-              </Grid>
-            ))}
           </Grid>
         </Container>
       </Box>

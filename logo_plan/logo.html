@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Logo Generator</title>
+    <style>
+        body { background: #f4f4f4; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', serif; }
+        .canvas-container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        canvas { max-width: 100%; height: auto; background-image: radial-gradient(#ddd 1px, transparent 1px); background-size: 20px 20px; border: 1px solid #eee; }
+        .controls { margin-top: 25px; }
+        button { background: #800000; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="canvas-container">
+    <canvas id="logoCanvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <button onclick="downloadLogo()">Download Transparent Logo</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('logoCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const config = {
+        mainText: "VIJAYALAKSHMI",
+        subText: "BOYAR MATRIMONY",
+        tagline: "FIND YOUR PERFECT MATCH | EST. 2023",
+        colors: { maroon: "#4E1214", navy: "#1A2E44", gold: "#B8860B" }
+    };
+
+    const img = new Image();
+    // CHANGE THIS: Ensure your image is in the same folder as this HTML file
+    img.src = 'logo_design.jpg'; 
+
+    img.onload = function() {
+        render();
+    };
+
+    // If the image fails to load, it will still draw the text so it's not blank
+    img.onerror = function() {
+        console.error("Image failed to load. Check the filename.");
+        render(); 
+    };
+
+    function render() {
+    // 1. Clear the canvas so it stays transparent
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const centerX = canvas.width / 2;
+
+    // 2. Draw the Image Section
+    if (img.complete && img.naturalHeight !== 0) {
+        ctx.save();
+        
+        // Start the Circle path
+        ctx.beginPath();
+        
+        // Center: centerX, 280 | Radius: 240
+        ctx.arc(centerX, 280, 240, 0, Math.PI * 2); 
+        
+        // Fill the circle with solid White before drawing the image
+        // This removes the "cut-off" look by providing a clean background
+        ctx.fillStyle = "#FFFFFF"; 
+        ctx.fill();
+
+        // Clip everything inside the circle
+        ctx.clip();
+
+        /**
+         * 3. DRAW THE IMAGE
+         * Parameters: (image, x, y, width, height)
+         * centerX - 400 centers the 800px wide image
+         * 40 is the top position to keep the Kalasam centered
+         */
+        ctx.drawImage(img, centerX - 400, 40, 800, 500); 
+        
+        ctx.restore();
+    }
+}
+
+    function downloadLogo() {
+        const link = document.createElement('a');
+        link.download = 'Vijayalakshmi_Boyar_Logo.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+</script>
+</body>
+</html>
