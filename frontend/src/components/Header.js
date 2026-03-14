@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, Badge, Chip, Divider } from '@mui/material';
-import { AccountCircle, Search, Message, FavoriteBorder, Verified, AdminPanelSettings, WorkspacePremium, Star, Upgrade, SupportAgent } from '@mui/icons-material';
+import { AccountCircle, Search, Message, FavoriteBorder, Verified, AdminPanelSettings, WorkspacePremium, Star, Upgrade, SupportAgent, Info, ContactPage, Description, Menu as MenuIcon, Home, Pages } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { normalizeTier, getTierBadgeColor, getTierDisplayName, canUpgrade, isPaidTier, TIER_VALUES } from '../utils/subscription';
@@ -10,6 +10,7 @@ const Header = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [quickLinksAnchor, setQuickLinksAnchor] = React.useState(null);
 
   // Normalize subscription tier from database
   const subscriptionTier = normalizeTier(user?.subscriptionTier || user?.subscription?.plan);
@@ -28,6 +29,14 @@ const Header = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleQuickLinksOpen = (event) => {
+    setQuickLinksAnchor(event.currentTarget);
+  };
+
+  const handleQuickLinksClose = () => {
+    setQuickLinksAnchor(null);
   };
 
   const handleLogout = () => {
@@ -158,7 +167,41 @@ const Header = () => {
             </Menu>
           </Box>
         ) : (
-          <Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            {/* Quick Links Dropdown */}
+            <Button 
+              color="inherit" 
+              startIcon={<MenuIcon />}
+              onClick={handleQuickLinksOpen}
+              style={{ backgroundColor: quickLinksAnchor ? 'rgba(255,255,255,0.2)' : 'transparent' }}
+            >
+              Quick Links
+            </Button>
+            <Menu
+              anchorEl={quickLinksAnchor}
+              keepMounted
+              open={Boolean(quickLinksAnchor)}
+              onClose={handleQuickLinksClose}
+            >
+              <MenuItem onClick={() => { navigate('/'); handleQuickLinksClose(); }}>
+                <Home fontSize="small" style={{ marginRight: 8 }} />
+                Home
+              </MenuItem>
+              <MenuItem onClick={() => { navigate('/about'); handleQuickLinksClose(); }}>
+                <Info fontSize="small" style={{ marginRight: 8 }} />
+                About Us
+              </MenuItem>
+              <MenuItem onClick={() => { navigate('/contact'); handleQuickLinksClose(); }}>
+                <ContactPage fontSize="small" style={{ marginRight: 8 }} />
+                Contact
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={() => { navigate('/terms'); handleQuickLinksClose(); }}>
+                <Description fontSize="small" style={{ marginRight: 8 }} />
+                Terms & Conditions
+              </MenuItem>
+            </Menu>
+
             <Button color="inherit" onClick={() => navigate('/login')}>
               Login
             </Button>
