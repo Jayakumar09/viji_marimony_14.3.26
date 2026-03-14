@@ -16,18 +16,6 @@ const Footer = () => {
             </Typography>
           </Box>
 
-          <Box flex="1" minWidth="200px">
-            <Typography variant="h6" gutterBottom>
-              Quick Links
-            </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              <Link href="/" color="inherit" underline="hover">Home</Link>
-              <Link href="/search" color="inherit" underline="hover">Search Profiles</Link>
-              <Link href="/about" color="inherit" underline="hover">About Us</Link>
-              <Link href="/contact" color="inherit" underline="hover">Contact</Link>
-            </Box>
-          </Box>
-
           <Box flex="1" minWidth="250px">
             <Typography variant="h6" gutterBottom>
               Contact Information

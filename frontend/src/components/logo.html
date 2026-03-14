@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vijayalakshmi Boyar Matrimony - Logo Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* The canvas is transparent by default */
+        #logoCanvas {
+            max-width: 100%;
+            height: auto;
+            /* Grid background just to help you see the transparency while designing */
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), 
+                              linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            border-radius: 4px;
+        }
+
+        .controls {
+            margin-top: 30px;
+        }
+
+        .btn-download {
+            background-color: #800000; /* Brand Maroon */
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-download:hover {
+            background-color: #600000;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <canvas id="logoCanvas" width="600" height="400"></canvas>
+        
+        <div class="controls">
+            <button class="btn-download" onclick="downloadLogo()">Download PNG (Transparent)</button>
+            <p>Commercial Pure Logo Style | No Borders | Heritage Icons</p>
+        </div>
+    </div>
+
+    <script>
+        const brandConfig = {
+            name: "VIJAYALAKSHMI",
+            subText: "BOYAR MATRIMONY",
+            colors: {
+                primary: "#800000", // Maroon
+                gold: "#D4AF37",    // Gold
+                text: "#333333"     // Charcoal
+            }
+        };
+
+        function drawLogo() {
+            const canvas = document.getElementById("logoCanvas");
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+
+            // 1. Clear for Transparency
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Draw the Symbol (Unique Feature: Kalasam + Vels)
+            // Draw Gold Kalasam Base
+            ctx.strokeStyle = brandConfig.colors.gold;
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(centerX, 100, 40, 0.2 * Math.PI, 0.8 * Math.PI, false);
+            ctx.stroke();
+
+            // Draw Vels (Spears) - The "Unique Feature"
+            ctx.lineWidth = 4;
+            // Left Vel
+            ctx.beginPath();
+            ctx.moveTo(centerX - 20, 110);
+            ctx.lineTo(centerX - 60, 50);
+            ctx.stroke();
+            // Right Vel
+            ctx.beginPath();
+            ctx.moveTo(centerX + 20, 110);
+            ctx.lineTo(centerX + 60, 50);
+            ctx.stroke();
+
+            // 3. Draw Main Brand Name (Serif font)
+            ctx.textAlign = "center";
+            ctx.fillStyle = brandConfig.colors.primary;
+            ctx.font = "bold 42px 'Times New Roman', serif";
+            ctx.fillText(brandConfig.name, centerX, 200);
+
+            // 4. Draw Community Tag (Sans-Serif font)
+            ctx.fillStyle = brandConfig.colors.text;
+            ctx.font = "20px Arial, sans-serif";
+            ctx.letterSpacing = "5px"; // Added for premium commercial look
+            ctx.fillText(brandConfig.subText, centerX, 240);
+        }
+
+        function downloadLogo() {
+            const canvas = document.getElementById("logoCanvas");
+            
+            // Temporary canvas to remove the grid preview during download
+            const link = document.createElement('a');
+            link.download = 'Vijayalakshmi-Boyar-Matrimony-Logo.png';
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        // Initialize design on load
+        window.onload = drawLogo;
+    </script>
+</body>
+</html>
