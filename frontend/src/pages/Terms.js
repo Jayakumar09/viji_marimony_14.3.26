@@ -365,11 +365,38 @@ const Terms = () => {
               1. Select your preferred subscription plan<br />
               2. Make payment using bank transfer or UPI<br />
               3. Submit payment proof through the portal<br />
-              4. Our team will verify and activate your subscription within 24-48 hours
+              4. Our team will verify and activate your subscription within <strong>2 to 24 hours</strong>
             </Typography>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              4.3 Success Fee (Marriage Fee)
+              4.3 Non-Refundable Policy
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <strong>All payments are non-refundable.</strong> Once your payment proof is verified and your account is upgraded to a paid subscription tier, no refunds will be provided under any circumstances. This includes:
+            </Typography>
+            <Box component="ul" sx={{ pl: 2 }}>
+              <li><Typography variant="body2">Subscription fees are non-refundable</Typography></li>
+              <li><Typography variant="body2">Success fees (marriage fees) are non-refundable</Typography></li>
+              <li><Typography variant="body2">No partial refunds for early cancellation</Typography></li>
+            </Box>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
+              4.4 Accuracy of Payment Details
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <strong>You are responsible for providing the correct Transaction ID/UTR number</strong> when submitting payment proof. Please double-check the following:
+            </Typography>
+            <Box component="ul" sx={{ pl: 2 }}>
+              <li><Typography variant="body2">Ensure the Transaction ID is accurate and belongs to your payment</Typography></li>
+              <li><Typography variant="body2">Submit the correct amount as per your selected plan</Typography></li>
+              <li><Typography variant="body2">Include the correct date of payment</Typography></li>
+            </Box>
+            <Typography variant="body2" sx={{ mt: 1, p: 1, bgcolor: '#ffebee', borderRadius: 1 }}>
+              <strong>Warning:</strong> Incorrect Transaction IDs or fraudulent submissions may lead to account suspension and permanent ban from the platform.
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
+              4.5 Success Fee (Marriage Fee)
             </Typography>
             <Typography variant="body2" paragraph>
               In addition to the subscription fee, a success fee is applicable when you get married through our platform:
@@ -381,7 +408,7 @@ const Terms = () => {
             </Box>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              4.4 Tax Implications
+              4.6 Tax Implications
             </Typography>
             <Typography variant="body2" paragraph>
               All payments are subject to applicable taxes. GST is included in the stated prices.
@@ -458,7 +485,22 @@ const Terms = () => {
             </Box>
 
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
-              6.2 AI Verification
+              6.2 AI Verification Mandatory for Paid Tiers
+            </Typography>
+            <Typography variant="body2" paragraph>
+              <strong>AI verification is mandatory for all paid subscription tiers.</strong> Upgrading to a paid plan does NOT bypass our profile guidelines. All paid members must complete the AI verification process which includes:
+            </Typography>
+            <Box component="ul" sx={{ pl: 2 }}>
+              <li><Typography variant="body2">Face verification (selfie vs. profile photo matching)</Typography></li>
+              <li><Typography variant="body2">Document verification (ID proof)</Typography></li>
+              <li><Typography variant="body2">Profile authenticity validation</Typography></li>
+            </Box>
+            <Typography variant="body2" sx={{ mt: 1, p: 1, bgcolor: '#fff3e0', borderRadius: 1 }}>
+              <strong>Note:</strong> Until AI verification is completed, your paid features will not be fully activated. Premium features are contingent upon successful verification.
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
+              6.3 Profile Sharing
             </Typography>
             <Typography variant="body2" paragraph>
               Our AI verification system uses facial recognition and document validation to ensure profile authenticity. By using our services, you consent to AI processing of your photos and documents for verification purposes.
