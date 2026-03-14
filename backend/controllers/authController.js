@@ -392,9 +392,19 @@ const updateProfile = async (req, res) => {
       }
     });
 
-    const updatedUser = await prisma.user.update({
+    // Check if there's any data to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'No valid fields to update' });
+    }
+
+    await prisma.user.update({
       where: { id: req.user.id },
-      data: updateData,
+      data: updateData
+    });
+
+    // Fetch the complete updated user data (same as getMe)
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
       select: {
         id: true,
         email: true,
@@ -402,26 +412,103 @@ const updateProfile = async (req, res) => {
         firstName: true,
         lastName: true,
         gender: true,
+        dateOfBirth: true,
+        age: true,
+        community: true,
+        subCaste: true,
+        city: true,
+        state: true,
+        country: true,
         education: true,
         profession: true,
         income: true,
+        maritalStatus: true,
         height: true,
         weight: true,
         complexion: true,
         habits: true,
+        profilePhoto: true,
+        photos: true,
         bio: true,
         familyValues: true,
         familyType: true,
         familyStatus: true,
         aboutFamily: true,
-        subCaste: true,
-        updatedAt: true
+        isVerified: true,
+        isPremium: true,
+        subscriptionTier: true,
+        subscriptionStart: true,
+        subscriptionEnd: true,
+        emailVerified: true,
+        phoneVerified: true,
+        createdAt: true
       }
     });
 
+    // Normalize profile photo path
+    if (user.profilePhoto && !user.profilePhoto.startsWith('http') && !user.profilePhoto.startsWith('/')) {
+      user.profilePhoto = `/${user.profilePhoto}`;
+    }
+
+    // Normalize photos array paths
+    if (user.photos) {
+      try {
+        const photosArray = typeof user.photos === 'string' 
+          ? JSON.parse(user.photos) 
+          : user.photos;
+        if (Array.isArray(photosArray)) {
+          user.photos = photosArray.map(photo => {
+            if (!photo.startsWith('http') && !photo.startsWith('/')) {
+              return `/${photo}`;
+            }
+            return photo;
+          });
+        }
+      } catch (e) {
+        user.photos = [];
+      }
+    }
+
+    // Sync subscription status from Subscription table
+    const activeSubscription = await prisma.subscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'ACTIVE',
+        endDate: { gte: new Date() }
+      },
+      orderBy: {
+        endDate: 'desc'
+      }
+    });
+    
+    if (activeSubscription) {
+      const planTier = activeSubscription.plan.toUpperCase();
+      if (planTier !== user.subscriptionTier) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            subscriptionTier: planTier,
+            isPremium: true,
+            subscriptionStart: activeSubscription.startDate,
+            subscriptionEnd: activeSubscription.endDate
+          }
+        });
+        user.subscriptionTier = planTier;
+        user.isPremium = true;
+        user.subscriptionStart = activeSubscription.startDate;
+        user.subscriptionEnd = activeSubscription.endDate;
+      }
+    } else if (user.subscriptionEnd && new Date(user.subscriptionEnd) < new Date()) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { isPremium: false }
+      });
+      user.isPremium = false;
+    }
+
     res.json({
       message: 'Profile updated successfully',
-      user: updatedUser
+      user
     });
 
   } catch (error) {

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -11,39 +12,67 @@ export const useAuth = () => {
   return context;
 };
 
+// API functions
+const fetchUser = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  const response = await api.get('/auth/me');
+  return response.data.user;
+};
+
+const loginUser = async ({ email, password }) => {
+  const response = await api.post('/auth/login', { email, password });
+  const { token, user } = response.data;
+  localStorage.setItem('token', token);
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  return user;
+};
+
+const registerUser = async (userData) => {
+  const response = await api.post('/auth/register', userData);
+  const { token, user } = response.data;
+  localStorage.setItem('token', token);
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  return user;
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const initAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          const response = await api.get('/auth/me');
-          setUser(response.data.user);
-        } catch (error) {
-          localStorage.removeItem('token');
-          delete api.defaults.headers.common['Authorization'];
-        }
-      }
-      setLoading(false);
-    };
+  // Use React Query for user data - automatically caches and refetches
+  const { data: user, isLoading: loading, error } = useQuery({
+    queryKey: ['user'],
+    queryFn: fetchUser,
+    retry: false,
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+    refetchOnMount: true, // Always refetch on mount
+  });
 
-    initAuth();
-  }, []);
+  // Login mutation
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user) => {
+      queryClient.setQueryData(['user'], user);
+    },
+  });
 
+  // Register mutation
+  const registerMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (user) => {
+      queryClient.setQueryData(['user'], user);
+    },
+  });
+
+  // Login function
   const login = async (email, password) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-      
-      return { success: true };
+      const user = await loginMutation.mutateAsync({ email, password });
+      return { success: true, user };
     } catch (error) {
       return { 
         success: false, 
@@ -52,18 +81,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Register function
   const register = async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-      
-      return { success: true };
+      const user = await registerMutation.mutateAsync(userData);
+      return { success: true, user };
     } catch (error) {
-      // Check for validation errors first
       const validationErrors = error.response?.data?.details;
       if (validationErrors && Array.isArray(validationErrors)) {
         const firstError = validationErrors[0];
@@ -72,7 +95,6 @@ export const AuthProvider = ({ children }) => {
           error: `${firstError.field}: ${firstError.message}` 
         };
       }
-      // Otherwise return the main error
       return { 
         success: false, 
         error: error.response?.data?.error || error.response?.data?.message || 'Registration failed' 
@@ -80,34 +102,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
     delete api.defaults.headers.common['Authorization'];
-    setUser(null);
+    queryClient.setQueryData(['user'], null);
+    queryClient.clear();
   };
 
+  // Update user data - invalidates cache to trigger refetch
   const updateUser = async (updatedUser) => {
     if (updatedUser) {
-      // If specific user data is provided, merge it with existing user
-      setUser(prev => prev ? { ...prev, ...updatedUser } : updatedUser);
+      // If specific user data is provided, merge it with cached user
+      queryClient.setQueryData(['user'], (old) => old ? { ...old, ...updatedUser } : updatedUser);
     } else {
       // Fetch fresh user data from server
-      try {
-        const response = await api.get('/auth/me');
-        setUser(response.data.user);
-      } catch (error) {
-        console.error('Failed to refresh user data:', error);
-      }
+      await queryClient.invalidateQueries({ queryKey: ['user'] });
     }
   };
 
+  // Refresh user data from server
+  const refreshUser = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['user'] });
+  };
+
   const value = {
-    user,
+    user: user || null,
     loading,
+    error,
     login,
     register,
     logout,
-    updateUser
+    updateUser,
+    refreshUser,
   };
 
   return (

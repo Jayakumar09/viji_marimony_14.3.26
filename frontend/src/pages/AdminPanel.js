@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import {
   Box, Drawer, AppBar, Toolbar, Typography, List, ListItem, ListItemButton,
   ListItemIcon, ListItemText, Card, CardContent, CardMedia, Grid, Button,
@@ -39,59 +40,50 @@ const AdminPanel = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [pendingPhotoCount, setPendingPhotoCount] = useState(0);
-  const [pendingPaymentCount, setPendingPaymentCount] = useState(0);
-  const [pendingChatCount, setPendingChatCount] = useState(0);
 
-  // Fetch pending photo count for badge
-  const fetchPendingPhotoCount = async () => {
-    try {
+  // React Query for admin stats - auto-refreshes every 30 seconds
+  const { data: dashboardData, isLoading: loadingDashboard } = useQuery({
+    queryKey: ['admin-dashboard'],
+    queryFn: async () => {
       const response = await api.get('/admin/dashboard');
-      setPendingPhotoCount(response.data.pendingPhotoVerifications || 0);
-    } catch (error) {
-      console.error('Failed to fetch pending photo count:', error);
-    }
-  };
+      return response.data;
+    },
+    enabled: isAdmin,
+    refetchInterval: 30000, // Auto-refresh every 30 seconds
+    staleTime: 10000, // Consider data fresh for 10 seconds
+  });
 
-  // Fetch pending payment count for badge
-  const fetchPendingPaymentCount = async () => {
-    try {
+  const { data: paymentStats, isLoading: loadingPayments } = useQuery({
+    queryKey: ['admin-payments'],
+    queryFn: async () => {
       const response = await api.get('/payments/admin/stats');
-      setPendingPaymentCount(response.pendingVerification || 0);
-    } catch (error) {
-      console.error('Failed to fetch pending payment count:', error);
-    }
-  };
+      return response;
+    },
+    enabled: isAdmin,
+    refetchInterval: 30000,
+    staleTime: 10000,
+  });
 
-  // Fetch pending chat count for badge
-  const fetchPendingChatCount = async () => {
-    try {
+  const { data: chatStats, isLoading: loadingChats } = useQuery({
+    queryKey: ['admin-chats'],
+    queryFn: async () => {
       const response = await api.get('/chat/admin/unread-count');
-      setPendingChatCount(response.unreadCount || 0);
-    } catch (error) {
-      console.error('Failed to fetch pending chat count:', error);
-    }
-  };
+      return response;
+    },
+    enabled: isAdmin,
+    refetchInterval: 30000,
+    staleTime: 10000,
+  });
+
+  // Extract counts from query data
+  const pendingPhotoCount = dashboardData?.pendingPhotoVerifications || 0;
+  const pendingPaymentCount = paymentStats?.pendingVerification || 0;
+  const pendingChatCount = chatStats?.unreadCount || 0;
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    if (isAdmin) {
-      fetchPendingPhotoCount();
-      fetchPendingPaymentCount();
-      fetchPendingChatCount();
-      // Refresh count every 30 seconds
-      const interval = setInterval(() => {
-        fetchPendingPhotoCount();
-        fetchPendingPaymentCount();
-        fetchPendingChatCount();
-      }, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [isAdmin]);
 
   if (!isAdmin) {
     return (

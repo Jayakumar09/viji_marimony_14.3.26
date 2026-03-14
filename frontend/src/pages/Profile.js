@@ -266,7 +266,9 @@ const Profile = () => {
       setSuccess('');
 
       const response = await profileService.updateProfile(data);
-      updateUser(response.user);
+      
+      // Fetch fresh user data from server to ensure sync
+      await updateUser();
       
       const normalized = { 
         ...profileData, // Preserve existing photo fields and other data
@@ -437,7 +439,8 @@ const Profile = () => {
           profilePhotoY: 0,
           _refresh: timestamp
         }));
-        updateUser(user ? { ...user, profilePhoto: response.profilePhoto } : { profilePhoto: response.profilePhoto });
+        // Fetch fresh user data from server to ensure sync
+        await updateUser();
         
         setPhotoScale(1);
         setPhotoPosX(0);
@@ -590,7 +593,8 @@ const Profile = () => {
       
       const response = await profileService.uploadGalleryPhotos(compressedFiles);
       setProfileData(prev => ({ ...prev, photos: response.photos }));
-      updateUser(user ? { ...user, photos: response.photos } : { photos: response.photos });
+      // Fetch fresh user data from server to ensure sync
+      await updateUser();
       toast.success('Gallery photos uploaded successfully!');
       
       if (galleryInputRef.current) {
@@ -615,7 +619,8 @@ const Profile = () => {
       await profileService.deletePhoto(photoToDelete);
       const updatedPhotos = profileData.photos.filter(photo => photo !== photoToDelete);
       setProfileData(prev => ({ ...prev, photos: updatedPhotos }));
-      updateUser(user ? { ...user, photos: updatedPhotos } : { photos: updatedPhotos });
+      // Fetch fresh user data from server to ensure sync
+      await updateUser();
       toast.success('Photo deleted successfully!');
       setDeleteDialog(false);
       setPhotoToDelete('');

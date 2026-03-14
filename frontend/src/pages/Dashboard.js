@@ -7,11 +7,13 @@ import { getImageUrl } from '../utils/imageUrl';
 import { normalizeTier, getTierDisplayName, canUpgrade, isPaidTier } from '../utils/subscription';
 
 const Dashboard = () => {
-  const { user, loading, updateUser } = useAuth();
+  const { user, loading, refreshUser } = useAuth();
   const navigate = useNavigate();
 
+  // React Query handles auto-refetch on window focus automatically
+  
   const handleRefresh = async () => {
-    await updateUser();
+    await refreshUser();
   };
 
   if (loading) {

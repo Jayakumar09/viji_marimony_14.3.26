@@ -37,7 +37,10 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true, // Enable auto-refresh when window gains focus
+      refetchOnMount: true, // Always refetch on component mount
+      staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+      gcTime: 30 * 60 * 1000, // Keep unused data in cache for 30 minutes
     },
   },
 });
