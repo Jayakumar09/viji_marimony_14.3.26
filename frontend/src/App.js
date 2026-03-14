@@ -22,6 +22,7 @@ import NotFound from './pages/NotFound';
 import ManualPayment from './pages/ManualPayment';
 import UserChat from './pages/UserChat';
 import TestPDF from './TestPDF';
+import Terms from './pages/Terms';
 
 // Context/Hooks
 import { useAuth } from './hooks/useAuth';
@@ -43,6 +44,7 @@ function App() {
           <Route path="/test-pdf" element={<TestPDF />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
           <Route path="/register" element={!user ? <Register /> : <Navigate to="/dashboard" />} />
+          <Route path="/terms" element={<Terms />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
